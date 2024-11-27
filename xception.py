@@ -67,3 +67,5 @@ print("\nFinal Results:")
 print(f"Total images processed: {total_images}")
 print(f"Total images predicted as 'banana': {banana_count}")
 print(f"Percentage of 'banana' predictions: {banana_percentage:.2f}%")
+
+# Percentage of correct 'banana' predictions with just pretrained model (no transfer learning): 27.13%

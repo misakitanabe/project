@@ -7,7 +7,7 @@ import os
 model = Xception(weights='imagenet')
 
 # Directory containing the images
-folder_path = 'fruit_images/Good_Quality_Fruits/Banana_Good'
+folder_path = 'fruit_images/Good_Quality_Fruits/Apple_Good'
 
 # Initialize counters
 banana_count = 0

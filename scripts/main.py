@@ -7,14 +7,14 @@ from utils import plot_training_history
 img_size = (299, 299)
 batch_size = 16
 # epochs = 20
-epochs = 3
+epochs = 10
 num_classes = 12  # Number of classes in the dataset
 
 # Paths
 train_dir = 'dataset/train'
 val_dir = 'dataset/validation'
 test_dir = 'dataset/test'
-model_path = 'models/xception_finetuned.h5'
+model_path = f'models/xception_{epochs}_epochs.h5'
 results_path = f"results/transfer_learning/{epochs}_epochs"
 
 # Step 1: Load Data

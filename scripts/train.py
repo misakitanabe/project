@@ -35,7 +35,7 @@ def train_model(model, train_data, val_data, output_path, epochs=10):
         train_data,
         validation_data=val_data,
         epochs=epochs,
-        steps_per_epoch=train_data.samples // train_data.batch_size,
+        # steps_per_epoch=train_data.samples // train_data.batch_size,
         validation_steps=val_data.samples // val_data.batch_size
     )
 

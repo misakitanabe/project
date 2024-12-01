@@ -11,13 +11,13 @@ from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
 
-model_path = 'models/xception_finetuned.h5'
+model_path = 'models/transfer_learning/xception_10_epochs.h5'
 
 model = load_model(model_path)
 # print(model.summary())
 
 # can replace path in this function with any image to test
-img = cv2.imread('dataset/fruit_images/Lime_Bad/IMG_6950.JPG')
+img = cv2.imread('dataset/fruit_images/Apple_Bad/IMG_8141.JPG')
 print("original shape", img.shape)
 
 img = cv2.resize(img, (299, 299))

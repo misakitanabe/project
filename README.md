@@ -16,6 +16,8 @@ Note: Right now, it only uses 3 epochs because it takes too long for more but ul
 ### you can skip this step for now and just try out a model I built by following step 4 if you don't
 ### want to build the model. this step takes a lot of computing power and some time ~15mins for me
 
+### change line 17 model_path to whatever you want to name your model
+
 This script builds off of the base model, Xception, and uses transfer learning to train the model
 to predict good/rotten fruits. Transfer learning freezes the original layers of the pretrained 
 model, then adds custom layers for classification. This makes it so that our model will only predict

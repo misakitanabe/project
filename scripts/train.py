@@ -24,6 +24,11 @@ def build_model(num_classes):
 
 def train_model(model, train_data, val_data, output_path, epochs=10):
     """Trains the model and saves it."""
+
+    print('Number of training samples:', train_data.samples)
+    print('Number of batches:', train_data.batch_size)
+    print('steps_per_epoch:', train_data.samples // train_data.batch_size)
+    
     # Train the model
     model.fit(
         train_data,

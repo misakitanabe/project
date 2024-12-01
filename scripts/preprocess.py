@@ -24,7 +24,8 @@ def load_data(train_dir, val_dir, test_dir, img_size=(299, 299), batch_size=16):
         train_dir,
         target_size=img_size,
         batch_size=batch_size,
-        class_mode='categorical'
+        class_mode='categorical',    # this will one-hot encode the labels
+        shuffle=True
     )
     val_data = val_gen.flow_from_directory(
         val_dir,
@@ -38,5 +39,7 @@ def load_data(train_dir, val_dir, test_dir, img_size=(299, 299), batch_size=16):
         batch_size=batch_size,
         class_mode='categorical'
     )
+
+    print(train_data.class_indices)
 
     return train_data, val_data, test_data

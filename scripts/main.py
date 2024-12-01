@@ -12,7 +12,8 @@ model_path = 'models/xception_finetuned.h5'
 # Hyperparameters
 img_size = (299, 299)
 batch_size = 16
-epochs = 20
+# epochs = 20
+epochs = 3
 num_classes = 12  # Number of classes in the dataset
 
 # Step 1: Load Data

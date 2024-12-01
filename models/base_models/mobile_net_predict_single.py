@@ -16,7 +16,7 @@ model = MobileNetV2(weights='imagenet')
 # print(model.summary())
 
 # can replace path in this function with any image to test
-img = cv2.imread('fruit_images/Good_Quality_Fruits/Banana_Good/IMG_8486.JPG')
+img = cv2.imread('dataset/fruit_images/Banana_Good/IMG_0121.JPG')
 print("original shape", img.shape)
 
 img = cv2.resize(img, (224, 224))

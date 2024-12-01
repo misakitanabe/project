@@ -26,11 +26,12 @@ def train_model(model, train_data, val_data, output_path, epochs=10):
     """Trains the model and saves it."""
 
     print('Number of training samples:', train_data.samples)
-    print('Number of batches:', train_data.batch_size)
+    print('Batch size:', train_data.batch_size)
     print('steps_per_epoch:', train_data.samples // train_data.batch_size)
-    
+    print('steps_per_epoch * epoch:,', train_data.samples // train_data.batch_size * epochs)
+
     # Train the model
-    model.fit(
+    transfer_history = model.fit(
         train_data,
         validation_data=val_data,
         epochs=epochs,
@@ -41,3 +42,5 @@ def train_model(model, train_data, val_data, output_path, epochs=10):
     # Save the model
     model.save(output_path)
     print(f"Model saved to {output_path}")
+
+    return transfer_history

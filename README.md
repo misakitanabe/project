@@ -6,6 +6,7 @@ pip install -r requirements.txt
 (i hope this works sorry if it doesn't!)
 
 # 3. Build your model (optional)
+### change line 17 model_path to whatever you want to name your model
 python3.9 [full path to main.py]
 
   ex) python3.9 /Users/misakitanabe/Documents/Cal\ Poly/year4/CSC\ 466/project/scripts/main.py
@@ -15,8 +16,6 @@ Note: Right now, it only uses 3 epochs because it takes too long for more but ul
 
 ### you can skip this step for now and just try out a model I built by following step 4 if you don't
 ### want to build the model. this step takes a lot of computing power and some time ~15mins for me
-
-### change line 17 model_path to whatever you want to name your model
 
 This script builds off of the base model, Xception, and uses transfer learning to train the model
 to predict good/rotten fruits. Transfer learning freezes the original layers of the pretrained 

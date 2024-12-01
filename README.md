@@ -6,7 +6,7 @@ pip install -r requirements.txt
 (i hope this works sorry if it doesn't!)
 
 # 3. Build your model!
-python3.9 <full path to main.py>
+python3.9 [full path to main.py]
 
   ex) python3.9 /Users/misakitanabe/Documents/Cal\ Poly/year4/CSC\ 466/project/scripts/main.py
 

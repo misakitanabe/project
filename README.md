@@ -7,6 +7,7 @@ pip install -r requirements.txt
 
 # 3. Build your model!
 python3.9 <full path to main.py>
+
   ex) python3.9 /Users/misakitanabe/Documents/Cal\ Poly/year4/CSC\ 466/project/scripts/main.py
 
 Note: Right now, it only uses 3 epochs because it takes too long for more but ultimately, we'd 

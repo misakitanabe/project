@@ -13,7 +13,7 @@ def build_model(num_classes):
     model = Sequential([
         base_model,
         GlobalAveragePooling2D(),
-        Dense(256, activation='relu'),  # Optional dense layer
+        Dense(256, activation='relu'),  # dense layer
         Dense(num_classes, activation='softmax')  # Adjust for the number of classes
     ])
 

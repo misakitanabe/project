@@ -1,56 +1,94 @@
-# pip install scikit-learn
-
 from sklearn.model_selection import train_test_split
+from utils import plot_combined_class_distribution
 import os
 import shutil
+import matplotlib.pyplot as plt
+
+# Function to clear directory contents
+def clear_directory(directory):
+    """Deletes all contents of a directory."""
+    if os.path.exists(directory):
+        for root, dirs, files in os.walk(directory):
+            for file in files:
+                os.remove(os.path.join(root, file))
+            for dir in dirs:
+                shutil.rmtree(os.path.join(root, dir))
+
+# Function to count images in each class
+def count_images(directory):
+    """Counts the number of images in each class within a directory."""
+    class_counts = {}
+    if os.path.exists(directory):
+        for class_name in os.listdir(directory):
+            class_path = os.path.join(directory, class_name)
+            if os.path.isdir(class_path):
+                class_counts[class_name] = len(os.listdir(class_path))
+    return class_counts
 
 # Paths
 dataset_dir = 'dataset/fruit_images'
 train_dir = 'dataset/train'
-val_dir = 'dataset/validation'
 test_dir = 'dataset/test'
 
-# Create directories if not exist
+# Clear directories before splitting
+clear_directory(train_dir)
+clear_directory(test_dir)
+
+# Create directories if they do not exist
 os.makedirs(train_dir, exist_ok=True)
-os.makedirs(val_dir, exist_ok=True)
 os.makedirs(test_dir, exist_ok=True)
 
 # Split dataset
-classes = os.listdir(dataset_dir)
-for class_name in classes:
-    class_path = os.path.join(dataset_dir, class_name)
-    images = os.listdir(class_path)
-    num_images = len(os.listdir(class_path))
-    print(f"Class '{class_name}' has {num_images} images.")
+parent_classes = os.listdir(dataset_dir)  # ['bad_fruit', 'good_fruit']
+for parent_class in parent_classes:
+    parent_class_path = os.path.join(dataset_dir, parent_class)
+    
+    # Check if it's a directory
+    if not os.path.isdir(parent_class_path):
+        continue
 
-    # Create full paths for all images
-    image_paths = [os.path.join(class_path, img) for img in images]
+    # Get all subdirectories (e.g., 'apple_bad', 'apple_good') and collect their images
+    subdirs = os.listdir(parent_class_path)
+    image_paths = []
+    
+    for subdir in subdirs:
+        subdir_path = os.path.join(parent_class_path, subdir)
+        
+        # Check if it's a directory
+        if not os.path.isdir(subdir_path):
+            continue
 
-    # Create class labels for stratification
-    labels = [class_name] * len(images)
+        # Collect all image paths from this subdirectory
+        images = os.listdir(subdir_path)
+        image_paths.extend([os.path.join(subdir_path, img) for img in images])
 
-    # Perform train-validation-test split does 70-15-15 ratio right now
-    train_imgs, temp_imgs, train_labels, temp_labels = train_test_split(
-        image_paths, labels, test_size=0.3, stratify=labels
+    # Create labels for stratification
+    labels = [parent_class] * len(image_paths)  # Label all images as 'bad_fruit' or 'good_fruit'
+
+    print(f"Parent class '{parent_class}' contains {len(image_paths)} images.")
+
+    # Split into train and test (80/20 split)
+    train_imgs, test_imgs, train_labels, test_labels = train_test_split(
+        image_paths, labels, test_size=0.2, stratify=labels, random_state=42
     )
-    val_imgs, test_imgs, val_labels, test_labels = train_test_split(
-        temp_imgs, temp_labels, test_size=0.5, stratify=temp_labels
-    )
 
-    # Move files to their respective directories
+    # Copy images to train directory
     for img in train_imgs:
-        dest = os.path.join(train_dir, class_name)
+        dest = os.path.join(train_dir, parent_class)
         os.makedirs(dest, exist_ok=True)
         shutil.copy(img, dest)
 
-    for img in val_imgs:
-        dest = os.path.join(val_dir, class_name)
-        os.makedirs(dest, exist_ok=True)
-        shutil.copy(img, dest)
-
+    # Copy images to test directory
     for img in test_imgs:
-        dest = os.path.join(test_dir, class_name)
+        dest = os.path.join(test_dir, parent_class)
         os.makedirs(dest, exist_ok=True)
         shutil.copy(img, dest)
 
-print("Dataset split completed successfully!")
+print("Dataset split into train and test successfully!")
+
+# Count images in each class for train and test sets
+train_counts = count_images(train_dir)
+test_counts = count_images(test_dir)
+
+# Plot combined class distribution
+plot_combined_class_distribution(train_counts, test_counts, "Class Distribution (Train vs Test)", save_path="plots/class_distribution.jpg")

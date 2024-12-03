@@ -1,13 +1,16 @@
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2, preprocess_input, decode_predictions
+import tensorflow as tf
 import numpy as np
 import cv2
 import os
 
 # Load the pretrained Xception model with ImageNet weights
 model = MobileNetV2(weights='imagenet')
+model.save('models/mobile_net.keras')
+
 
 # Directory containing the images
-folder_path = 'fruit_images/Good_Quality_Fruits/Banana_Good'
+folder_path = 'dataset/fruit_images/Banana_Good'
 
 # Initialize counters
 banana_count = 0

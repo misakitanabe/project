@@ -1,9 +1,9 @@
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-def load_data(train_dir, val_dir, test_dir, img_size=(299, 299), batch_size=16):
+def load_data(train_dir, test_dir, img_size=(299, 299), batch_size=16):
     """Loads training, validation, and test datasets."""
     # Define ImageDataGenerators
-    # Normalize pixels for training, validation, and testing
+    # Normalize pixels for training and testing
     
     # Just for training:
     # data augmentation to increase diversity of dataset by applying random transformations during epochs
@@ -16,7 +16,6 @@ def load_data(train_dir, val_dir, test_dir, img_size=(299, 299), batch_size=16):
         zoom_range=0.2,
         horizontal_flip=True,
     )
-    val_gen = ImageDataGenerator(rescale=1.0 / 255)
     test_gen = ImageDataGenerator(rescale=1.0 / 255)
 
     # Load datasets
@@ -27,12 +26,6 @@ def load_data(train_dir, val_dir, test_dir, img_size=(299, 299), batch_size=16):
         class_mode='categorical',    # this will one-hot encode the labels
         shuffle=True
     )
-    val_data = val_gen.flow_from_directory(
-        val_dir,
-        target_size=img_size,
-        batch_size=batch_size,
-        class_mode='categorical'
-    )
     test_data = test_gen.flow_from_directory(
         test_dir,
         target_size=img_size,
@@ -42,4 +35,4 @@ def load_data(train_dir, val_dir, test_dir, img_size=(299, 299), batch_size=16):
 
     print(train_data.class_indices)
 
-    return train_data, val_data, test_data
+    return train_data, test_data

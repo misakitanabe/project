@@ -1,29 +1,7 @@
 from sklearn.model_selection import train_test_split
-from utils import plot_combined_class_distribution
+from utils import plot_combined_class_distribution, clear_directory, count_images
 import os
 import shutil
-import matplotlib.pyplot as plt
-
-# Function to clear directory contents
-def clear_directory(directory):
-    """Deletes all contents of a directory."""
-    if os.path.exists(directory):
-        for root, dirs, files in os.walk(directory):
-            for file in files:
-                os.remove(os.path.join(root, file))
-            for dir in dirs:
-                shutil.rmtree(os.path.join(root, dir))
-
-# Function to count images in each class
-def count_images(directory):
-    """Counts the number of images in each class within a directory."""
-    class_counts = {}
-    if os.path.exists(directory):
-        for class_name in os.listdir(directory):
-            class_path = os.path.join(directory, class_name)
-            if os.path.isdir(class_path):
-                class_counts[class_name] = len(os.listdir(class_path))
-    return class_counts
 
 # Paths
 dataset_dir = 'dataset/fruit_images'

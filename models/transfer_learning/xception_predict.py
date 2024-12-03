@@ -5,42 +5,38 @@
 # python version: 3.11.5
 
 # run using "python3.9 <full path>", not pressing run on IDE it doesn't use correct python environment
+# python3.9 /Users/misakitanabe/Documents/Cal\ Poly/year4/CSC\ 466/project/models/transfer_learning/xception_predict.py
 
 from tensorflow.keras.applications.xception import preprocess_input, decode_predictions
 from tensorflow.keras.models import load_model
 import numpy as np
 import cv2
 
-model_path = 'models/transfer_learning/xception_10_epochs.h5'
+model_path = 'models/xception_3_epochs.h5'
 
 model = load_model(model_path)
 # print(model.summary())
 
 # can replace path in this function with any image to test
-img = cv2.imread('dataset/fruit_images/Apple_Bad/IMG_8141.JPG')
-print("original shape", img.shape)
+img = cv2.imread('dataset/fruit_images/good_fruit/Pomegranate_Good/20190820_143522_22898.jpg')
+# print("original shape", img.shape)
 
 img = cv2.resize(img, (299, 299))
-print("resized shape", img.shape)
+# print("resized shape", img.shape)
 
 # create numpy array for the model
 data = np.empty((1, 299, 299, 3))
 
 # store our image inside the "batch" of images
 data[0] = img
-print("data shape for the model", data.shape)
+# print("data shape for the model", data.shape)
 
 # normalize the data
 data = preprocess_input(data)
 
 
 class_labels = ({
-    0: "Apple_Bad", 1: "Apple_Good", 
-    2: "Banana_Bad", 3: "Banana_Good", 
-    4: "Guava_Bad", 5: "Guava_Good", 
-    6: "Lime_Bad", 7: "Lime_Good", 
-    8: "Orange_Bad", 9: "Orange_Good", 
-    10: "Pomegranate_Bad", 11: "Pomegranate_Good"
+    0: "Bad Fruit", 1: "Good Fruit", 
 })
 
 # predict

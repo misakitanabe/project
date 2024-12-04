@@ -1,8 +1,9 @@
 import tensorflow as tf
 import numpy as np
 from sklearn.metrics import recall_score, accuracy_score, confusion_matrix
-from utils import extract_data_and_labels
+from utils import extract_data_and_labels, plot_confusion_matrix
 from tensorflow.keras.models import load_model
+import os
 
 def evaluate_model(model_path, test_data, batch_size=16):
     """Evaluates the model based on accuracy and recall."""
@@ -21,13 +22,10 @@ def evaluate_model(model_path, test_data, batch_size=16):
     accuracy = accuracy_score(y_true, y_pred)
     recall = recall_score(y_true, y_pred, average='macro')  # 'macro' for multi-class recall
 
-    # Compute confusion matrix
-    conf_matrix = confusion_matrix(y_true, y_pred)
-
     # Print results
     print(f"Accuracy: {accuracy:.4f}")
     print(f"Recall: {recall:.4f}")
-    print("Confusion Matrix:")
-    print(conf_matrix)
 
-    return accuracy, recall, conf_matrix
+    plot_confusion_matrix(y_true, y_pred, test_data.class_indices.keys(), f"plots/{os.path.basename(model_path)}_confusion_matrix.jpg")
+
+    return accuracy, recall

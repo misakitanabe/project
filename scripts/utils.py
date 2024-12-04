@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import os
 import shutil
 import numpy as np
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
 
 def plot_training_history(history, output_path=None):
     # Create directories if not exist
@@ -94,3 +96,26 @@ def extract_data_and_labels(generator):
     print(f"Successfully extracted data and labels.")
 
     return np.array(data), np.array(labels)
+
+def plot_confusion_matrix(y_true, y_pred, class_names, output_path=None):
+    """
+    Plots a confusion matrix as a heatmap.
+    
+    Args:
+        y_true (list or np.array): Ground truth labels.
+        y_pred (list or np.array): Predicted labels.
+        class_names (list): List of class names.
+    """
+    # Generate confusion matrix
+    cm = confusion_matrix(y_true, y_pred)
+
+    # Plot the heatmap
+    plt.figure(figsize=(8, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+    plt.title('Confusion Matrix')
+    plt.ylabel('True Labels')
+    plt.xlabel('Predicted Labels')
+    plt.tight_layout()
+    # plt.show()
+    if output_path:
+        plt.savefig(output_path)

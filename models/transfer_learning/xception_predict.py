@@ -3,11 +3,11 @@ from tensorflow.keras.models import load_model
 import numpy as np
 
 # Load the trained model
-model_path = 'models/transfer_learning/xception_3_epochs.h5'
+model_path = 'models/xception_3_epochs.h5'
 model = load_model(model_path)
 
 # Load the image
-image_path = "dataset/fruit_images/bad_fruit/Apple_Bad/IMG_8131.JPG"
+image_path = "IMG_3401.jpg"
 img_size = (299, 299) 
 image = load_img(image_path, target_size=img_size)
 

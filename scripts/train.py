@@ -29,6 +29,7 @@ def train_model_with_kfold(data, labels, num_classes, k=10, epochs=10, batch_siz
     """Performs KFold cross-validation and saves the final model."""
     kfold = KFold(n_splits=k, shuffle=True, random_state=42)
     fold_accuracies = []
+    training_accuracies = []
 
     for fold, (train_idx, val_idx) in enumerate(kfold.split(data)):
         print(f"Starting fold {fold + 1}/{k}...")
@@ -48,18 +49,22 @@ def train_model_with_kfold(data, labels, num_classes, k=10, epochs=10, batch_siz
         model = build_model(num_classes)
         model.fit(
             train_dataset,
-            validation_data=val_dataset,
+            # validation_data=val_dataset,
             epochs=epochs
         )
 
         # Evaluate on validation set
         val_loss, val_accuracy = model.evaluate(val_dataset)
+        training_loss, training_accuracy = model.evaluate(train_dataset)
+        training_accuracies.append(training_accuracy)
         print(f"Fold {fold + 1} Validation Accuracy: {val_accuracy:.4f}")
         fold_accuracies.append(val_accuracy)
 
     # Compute the average validation accuracy
     avg_accuracy = np.mean(fold_accuracies)
     print(f"Average Validation Accuracy across {k} folds: {avg_accuracy:.4f}")
+    avg_training_accuracy = np.mean(training_accuracies)
+    print(f"Average Training Accuracy across {k} folds: {avg_training_accuracy:.4f}")
 
     # Train final model on the entire dataset
     print("Training final model on the entire training dataset...")

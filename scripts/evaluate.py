@@ -1,26 +1,33 @@
-from tensorflow.keras.models import load_model
-from sklearn.metrics import classification_report
+import tensorflow as tf
 import numpy as np
+from sklearn.metrics import recall_score, accuracy_score, confusion_matrix
+from utils import extract_data_and_labels
+from tensorflow.keras.models import load_model
 
-def evaluate_model(model_path, test_data):
-    """Evaluates the model on the test dataset and computes precision, recall, and accuracy."""
-    # Load the trained model
+def evaluate_model(model_path, test_data, batch_size=16):
+    """Evaluates the model based on accuracy and recall."""
     model = load_model(model_path)
+    test_images, test_labels = extract_data_and_labels(test_data)
+    test_labels = np.argmax(test_labels, axis=1)
+    test_dataset = tf.data.Dataset.from_tensor_slices((test_images, test_labels))
+    test_dataset = test_dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
 
-    # Get predictions and true labels
-    predictions = model.predict(test_data)
-    y_pred = np.argmax(predictions, axis=1)  # Convert probabilities to class indices
-    y_true = test_data.classes  # True class indices
+    # Get predictions
+    y_pred_probs = model.predict(test_dataset)
+    y_pred = np.argmax(y_pred_probs, axis=1)  # Convert probabilities to class indices
+    y_true = np.array(test_labels)
 
-    # Class labels
-    class_labels = list(test_data.class_indices.keys())
+    # Calculate metrics
+    accuracy = accuracy_score(y_true, y_pred)
+    recall = recall_score(y_true, y_pred, average='macro')  # 'macro' for multi-class recall
 
-    # Compute and display metrics
-    print("Classification Report:")
-    report = classification_report(y_true, y_pred, target_names=class_labels, digits=4)
-    print(report)
+    # Compute confusion matrix
+    conf_matrix = confusion_matrix(y_true, y_pred)
 
-    # Compute loss and accuracy directly
-    test_loss, test_accuracy = model.evaluate(test_data)
-    print(f"Test Loss: {test_loss:.4f}")
-    print(f"Test Accuracy: {test_accuracy:.4f}")
+    # Print results
+    print(f"Accuracy: {accuracy:.4f}")
+    print(f"Recall: {recall:.4f}")
+    print("Confusion Matrix:")
+    print(conf_matrix)
+
+    return accuracy, recall, conf_matrix

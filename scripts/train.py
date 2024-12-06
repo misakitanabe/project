@@ -1,4 +1,5 @@
 from tensorflow.keras.applications import Xception
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import GlobalAveragePooling2D, Dense
 from tensorflow.keras.optimizers import Adam
@@ -6,10 +7,14 @@ from sklearn.model_selection import KFold
 import numpy as np
 import tensorflow as tf
 
-def build_model(num_classes):
+def build_model(num_classes, base_model='xception'):
     """Builds and compiles the Xception-based fine-tuning model."""
     # Load the base model
-    base_model = Xception(weights='imagenet', include_top=False, input_shape=(299, 299, 3))
+    if base_model == 'xception':
+        base_model = Xception(weights='imagenet', include_top=False, input_shape=(299, 299, 3))
+    else:
+        print("Creating MobileNetV2 model")
+        base_model = MobileNetV2(weights='imagenet', include_top=False, input_shape=(224, 224, 3))
     base_model.trainable = False  # Freeze the base model initially
 
     # Add custom layers
@@ -25,11 +30,12 @@ def build_model(num_classes):
 
     return model
 
-def train_model_with_kfold(data, labels, num_classes, k=10, epochs=10, batch_size=16, output_path="final_model.h5"):
+def train_model_with_kfold(data, labels, num_classes, k=10, epochs=10, batch_size=16, output_path="final_model.h5", base_model='xception'):
     """Performs KFold cross-validation and saves the final model."""
     kfold = KFold(n_splits=k, shuffle=True, random_state=42)
     fold_accuracies = []
     training_accuracies = []
+    history = None
 
     for fold, (train_idx, val_idx) in enumerate(kfold.split(data)):
         print(f"Starting fold {fold + 1}/{k}...")
@@ -46,10 +52,13 @@ def train_model_with_kfold(data, labels, num_classes, k=10, epochs=10, batch_siz
         val_dataset = val_dataset.batch(batch_size).prefetch(tf.data.AUTOTUNE)
 
         # Build and train the model
-        model = build_model(num_classes)
-        model.fit(
+        if base_model == 'xception':
+            model = build_model(num_classes, 'xception')
+        else:
+            model = build_model(num_classes, 'mobilenet')
+        history = model.fit(
             train_dataset,
-            # validation_data=val_dataset,
+            validation_data=val_dataset,
             epochs=epochs
         )
 
@@ -71,8 +80,11 @@ def train_model_with_kfold(data, labels, num_classes, k=10, epochs=10, batch_siz
     full_dataset = tf.data.Dataset.from_tensor_slices((data, labels))
     full_dataset = full_dataset.shuffle(len(data)).batch(batch_size).prefetch(tf.data.AUTOTUNE)
 
-    final_model = build_model(num_classes)
-    history = final_model.fit(full_dataset, epochs=epochs)
+    if base_model == 'xception':
+        final_model = build_model(num_classes)
+    else:
+        final_model = build_model(num_classes, 'mobilenet')
+    final_model.fit(full_dataset, epochs=epochs)
 
     # Save the final model
     final_model.save(output_path)

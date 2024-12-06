@@ -5,7 +5,7 @@ from utils import extract_data_and_labels, plot_confusion_matrix
 from tensorflow.keras.models import load_model
 import os
 
-def evaluate_model(model_path, test_data, batch_size=16):
+def evaluate_model(model_path, test_data, batch_size=16, epochs=10):
     """Evaluates the model based on accuracy and recall."""
     model = load_model(model_path)
     test_images, test_labels = extract_data_and_labels(test_data)
@@ -26,6 +26,6 @@ def evaluate_model(model_path, test_data, batch_size=16):
     print(f"Accuracy: {accuracy:.4f}")
     print(f"Recall: {recall:.4f}")
 
-    plot_confusion_matrix(y_true, y_pred, test_data.class_indices.keys(), f"plots/{os.path.basename(model_path)}_confusion_matrix.jpg")
+    plot_confusion_matrix(y_true, y_pred, test_data.class_indices.keys(), f"plots/xception_{epochs}_epochs/confusion_matrix.jpg")
 
     return accuracy, recall

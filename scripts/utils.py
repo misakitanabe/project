@@ -5,36 +5,39 @@ import numpy as np
 import seaborn as sns
 from sklearn.metrics import confusion_matrix
 
-def plot_training_history(history, output_path=None):
+def plot_training_history(history, output_path=None, base_model='xception'):
     # Create directories if not exist
     if output_path:
         os.makedirs(output_path, exist_ok=True)
 
-    """Plots training and validation accuracy/loss over epochs."""
-    acc = history.history['accuracy']
-    # val_acc = history.history['val_accuracy']
-    loss = history.history['loss']
-    # val_loss = history.history['val_loss']
+    """Plots validation accuracy/loss over epochs."""
+    acc = history.history['val_accuracy']
+    loss = history.history['val_loss']
     epochs = range(len(acc))
 
     # Plot accuracy
     plt.figure()
-    plt.plot(epochs, acc, label='Training Accuracy')
-    # plt.plot(epochs, val_acc, label='Validation Accuracy')
-    plt.title('Training Accuracy')
+    plt.plot(epochs, acc, label='Cross Validation Accuracy')
+    if base_model == 'xception':
+        plt.title('Cross Validation Accuracy (Xception)')
+    else:
+        plt.title('Cross Validation Accuracy (MobileNet)')
+    plt.ylabel('Accuracy')
+    plt.xlabel('Number of Epochs')
     plt.legend()
     if output_path:
         plt.savefig(f"{output_path}_accuracy.jpg")
 
     # Plot loss
     plt.figure()
-    plt.plot(epochs, loss, label='Training Loss')
-    # plt.plot(epochs, val_loss, label='Validation Loss')
-    plt.title('Training Loss')
+    plt.plot(epochs, loss, label='Cross Validation Loss')
+    plt.title('Cross Validation Loss')
+    plt.ylabel('Loss')
+    plt.xlabel('Number of Epochs')
     plt.legend()
     if output_path:
         plt.savefig(f"{output_path}_loss.jpg")
-    # plt.show()
+
 
 # Plotting the combined distribution
 def plot_combined_class_distribution(train_counts, test_counts, title, save_path=None):
@@ -112,10 +115,9 @@ def plot_confusion_matrix(y_true, y_pred, class_names, output_path=None):
     # Plot the heatmap
     plt.figure(figsize=(8, 6))
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
-    plt.title('Confusion Matrix')
+    plt.title('Confusion Matrix on Generalization Set')
     plt.ylabel('True Labels')
     plt.xlabel('Predicted Labels')
     plt.tight_layout()
-    # plt.show()
     if output_path:
         plt.savefig(output_path)

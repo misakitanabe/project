@@ -37,7 +37,7 @@ transfer_history = (
         k=k,
         epochs=epochs,
         batch_size=batch_size,
-        output_path=model_path
+        output_path=model_path,
         base_model='xception'
     )
 )

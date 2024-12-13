@@ -27,7 +27,7 @@ train_data, test_data = load_data(train_dir, test_dir, img_size, batch_size)
 model = build_model(num_classes, 'mobilenet')
 
 # Step 3: Train Model
-train_images, train_labels = extract_data_and_labels(test_data) 
+train_images, train_labels = extract_data_and_labels(train_data) 
 transfer_history = (
     train_model_with_kfold
     (
